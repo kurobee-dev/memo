@@ -1,0 +1,36 @@
+Sub GenerateCSVFile()
+    Dim filePath As String
+    Dim fileNumber As Integer
+    Dim rowData As String
+    Dim rng As Range
+    Dim cell As Range
+    
+    ' テンプレートの範囲を選択します
+    Set rng = Worksheets("template").Range("A1:B1")
+    
+    ' 保存するCSVファイルのパスを指定します
+    filePath = "C:\Path\To\Your\File.csv"
+    
+    ' ファイルを開きます
+    fileNumber = FreeFile
+    Open filePath For Output As fileNumber
+    
+    ' データをCSV形式でファイルに書き込みます
+    For Each cell In rng
+        ' セルの値をダブルクオートで囲み、カンマで区切ります
+        rowData = """" & cell.Value & """"
+        
+        ' 最後の列では改行しないようにします
+        If cell.Column <> rng.Columns.Count Then
+            rowData = rowData & ","
+        End If
+        
+        Print #fileNumber, rowData;
+    Next cell
+    
+    ' ファイルを閉じます
+    Close fileNumber
+    
+    ' 完了メッセージを表示します
+    MsgBox "CSVファイルが生成されました。"
+End Sub
